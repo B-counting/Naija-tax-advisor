@@ -1,1 +1,181 @@
-
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8"/>
+<meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+<title>NaijaLex — Nigerian Tax Law Advisor</title>
+<link href="https://fonts.googleapis.com/css2?family=DM+Serif+Display&family=DM+Sans:wght@400;500&display=swap" rel="stylesheet"/>
+<style>
+  *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+  :root {
+    --green-50: #E1F5EE; --green-400: #1D9E75; --green-600: #0F6E56;
+    --purple-50: #EEEDFE; --purple-600: #534AB7; --purple-900: #26215C;
+    --gray-50: #F8F7F4; --gray-100: #F1EFE8; --gray-200: #D3D1C7;
+    --gray-400: #888780; --gray-700: #5F5E5A; --gray-900: #2C2C2A;
+    --border: 0.5px solid rgba(0,0,0,0.12);
+    --radius-md: 8px; --radius-lg: 14px; --radius-xl: 20px;
+    --font-body: 'DM Sans', sans-serif; --font-serif: 'DM Serif Display', serif;
+  }
+  body { font-family: var(--font-body); background: var(--gray-100); min-height: 100vh; display: flex; align-items: center; justify-content: center; padding: 24px 16px; }
+  .page-wrap { width: 100%; max-width: 720px; display: flex; flex-direction: column; gap: 20px; }
+  .header { text-align: center; padding: 0 0 4px; }
+  .header-logo { display: inline-flex; align-items: center; gap: 10px; margin-bottom: 10px; }
+  .logo-mark { width: 36px; height: 36px; border-radius: 9px; background: var(--green-400); display: flex; align-items: center; justify-content: center; color: #fff; font-size: 14px; font-weight: 500; }
+  .header h1 { font-family: var(--font-serif); font-size: 26px; font-weight: 400; color: var(--gray-900); letter-spacing: -0.3px; }
+  .header p { font-size: 13px; color: var(--gray-400); margin-top: 4px; }
+  .app { background: #fff; border-radius: var(--radius-xl); border: var(--border); overflow: hidden; display: flex; flex-direction: column; }
+  .topbar { display: flex; align-items: center; gap: 10px; padding: 13px 18px; border-bottom: var(--border); background: var(--gray-50); }
+  .topbar-info h2 { font-size: 13.5px; font-weight: 500; color: var(--gray-900); }
+  .topbar-info p { font-size: 11.5px; color: var(--gray-400); margin-top: 1px; }
+  .live-badge { margin-left: auto; display: flex; align-items: center; gap: 5px; font-size: 11px; color: var(--green-600); font-weight: 500; }
+  .live-dot { width: 6px; height: 6px; border-radius: 50%; background: var(--green-400); }
+  .chips { display: flex; flex-wrap: wrap; gap: 6px; padding: 11px 16px; border-bottom: var(--border); }
+  .chip { font-size: 11.5px; padding: 5px 11px; border-radius: 20px; border: 0.5px solid var(--gray-200); background: transparent; color: var(--gray-700); cursor: pointer; font-family: var(--font-body); transition: background 0.15s, color 0.15s; }
+  .chip:hover { background: var(--gray-100); color: var(--gray-900); }
+  .messages { flex: 1; padding: 18px; display: flex; flex-direction: column; gap: 14px; overflow-y: auto; min-height: 320px; max-height: 460px; }
+  .msg-row { display: flex; gap: 9px; align-items: flex-start; }
+  .msg-row.user { flex-direction: row-reverse; }
+  .avatar { width: 28px; height: 28px; border-radius: 50%; display: flex; align-items: center; justify-content: center; font-size: 11px; font-weight: 500; flex-shrink: 0; }
+  .avatar.ai { background: var(--green-50); color: var(--green-600); }
+  .avatar.user { background: var(--purple-50); color: var(--purple-600); }
+  .bubble { max-width: 84%; border-radius: var(--radius-lg); padding: 11px 14px; font-size: 13.5px; line-height: 1.65; color: var(--gray-900); }
+  .bubble.ai { background: var(--gray-50); border: var(--border); border-top-left-radius: 4px; }
+  .bubble.user { background: var(--purple-50); color: var(--purple-900); border-top-right-radius: 4px; }
+  .citations { margin-top: 12px; display: flex; flex-direction: column; gap: 6px; }
+  .cite-label { font-size: 10.5px; font-weight: 500; letter-spacing: 0.07em; text-transform: uppercase; color: var(--gray-400); margin-bottom: 3px; }
+  .cite-card { border: 0.5px solid var(--gray-200); border-radius: var(--radius-md); padding: 9px 11px; background: #fff; border-left: 2.5px solid var(--green-400); border-top-left-radius: 0; border-bottom-left-radius: 0; }
+  .cite-top { display: flex; align-items: center; gap: 6px; margin-bottom: 4px; }
+  .cite-badge { font-size: 10px; font-weight: 500; padding: 2px 7px; border-radius: 3px; background: var(--green-50); color: var(--green-600); }
+  .cite-ref { font-size: 11.5px; font-weight: 500; color: var(--gray-900); }
+  .cite-text { font-size: 13px; color: var(--gray-700); line-height: 1.55; font-family: var(--font-serif); }
+  .related-row { display: flex; flex-wrap: wrap; gap: 5px; margin-top: 10px; }
+  .related-tag { font-size: 11px; padding: 3px 9px; border-radius: 12px; background: var(--gray-100); color: var(--gray-700); border: 0.5px solid var(--gray-200); }
+  .disclaimer { font-size: 11px; color: var(--gray-400); border-top: var(--border); margin-top: 11px; padding-top: 9px; line-height: 1.55; }
+  .thinking { display: flex; align-items: center; gap: 8px; }
+  .dot-pulse { display: flex; gap: 3px; }
+  .dot-pulse span { width: 5px; height: 5px; border-radius: 50%; background: var(--gray-400); animation: pulse 1.2s ease-in-out infinite; }
+  .dot-pulse span:nth-child(2) { animation-delay: .2s; }
+  .dot-pulse span:nth-child(3) { animation-delay: .4s; }
+  @keyframes pulse { 0%, 80%, 100% { transform: scale(0.8); opacity: .45; } 40% { transform: scale(1); opacity: 1; } }
+  .inputrow { display: flex; gap: 8px; padding: 13px 16px; border-top: var(--border); background: var(--gray-50); }
+  .inputrow input { flex: 1; font-size: 13.5px; font-family: var(--font-body); padding: 9px 13px; border-radius: var(--radius-md); border: 0.5px solid var(--gray-200); background: #fff; color: var(--gray-900); outline: none; transition: border-color 0.15s, box-shadow 0.15s; }
+  .inputrow input::placeholder { color: var(--gray-400); }
+  .inputrow input:focus { border-color: var(--green-400); box-shadow: 0 0 0 2.5px rgba(29,158,117,0.12); }
+  .send-btn { padding: 9px 16px; border-radius: var(--radius-md); border: none; background: var(--green-400); color: #fff; font-size: 13px; font-weight: 500; font-family: var(--font-body); cursor: pointer; transition: background 0.15s; }
+  .send-btn:hover { background: var(--green-600); }
+  .send-btn:disabled { opacity: 0.4; cursor: not-allowed; }
+  .footer-note { text-align: center; font-size: 11.5px; color: var(--gray-400); line-height: 1.6; }
+  .footer-note a { color: var(--green-600); text-decoration: none; }
+</style>
+</head>
+<body>
+<div class="page-wrap">
+  <div class="header">
+    <div class="header-logo">
+      <div class="logo-mark">NL</div>
+      <h1>NaijaLex</h1>
+    </div>
+    <p>AI-powered Nigerian tax law advisor · Grounded in statute · Citation-first</p>
+  </div>
+  <div class="app">
+    <div class="topbar">
+      <div class="topbar-info">
+        <h2>Tax Advisory Engine</h2>
+        <p>CITA · PITA · VAT · Finance Acts 2019–2023 · FIRS Circulars</p>
+      </div>
+      <div class="live-badge"><div class="live-dot"></div>Live</div>
+    </div>
+    <div class="chips">
+      <button class="chip" onclick="askChip(this)">What is PAYE?</button>
+      <button class="chip" onclick="askChip(this)">CIT rate for SMEs?</button>
+      <button class="chip" onclick="askChip(this)">When is VAT remittable?</button>
+      <button class="chip" onclick="askChip(this)">Withholding tax on dividends?</button>
+      <button class="chip" onclick="askChip(this)">Pioneer status incentive?</button>
+      <button class="chip" onclick="askChip(this)">Thin capitalisation rules?</button>
+    </div>
+    <div class="messages" id="msgs">
+      <div class="msg-row">
+        <div class="avatar ai">NL</div>
+        <div class="bubble ai">
+          Welcome to NaijaLex. I'm your Nigerian tax law advisor, grounded in the full corpus of Nigerian tax legislation including CITA, PITA, VATA, Finance Acts, and FIRS administrative guidance. Every answer includes statutory citations so you can verify the source directly.
+          <div class="disclaimer">Informational guidance only — not formal legal or tax advice. Consult a qualified tax professional (ICAN/CITN member) or FIRS for your specific circumstances.</div>
+        </div>
+      </div>
+    </div>
+    <div class="inputrow">
+      <input id="inp" type="text" placeholder="Ask a Nigerian tax law question…" onkeydown="if(event.key==='Enter') send()"/>
+      <button class="send-btn" id="sendbtn" onclick="send()">Ask</button>
+    </div>
+  </div>
+  <div class="footer-note">
+    Open-source · MIT License · <a href="https://github.com/yourusername/naija-tax-advisor" target="_blank">GitHub</a> · Built with Claude API
+  </div>
+</div>
+<script>
+  const msgs = document.getElementById('msgs');
+  const inp = document.getElementById('inp');
+  const btn = document.getElementById('sendbtn');
+  let busy = false;
+  function askChip(el) { if (busy) return; inp.value = el.textContent; send(); }
+  function escHtml(str) { return String(str||'').replace(/&/g,'&amp;').replace(/</g,'&lt;').replace(/>/g,'&gt;').replace(/"/g,'&quot;'); }
+  function addUserBubble(text) {
+    const row = document.createElement('div');
+    row.className = 'msg-row user';
+    row.innerHTML = `<div class="avatar user">U</div><div class="bubble user">${escHtml(text)}</div>`;
+    msgs.appendChild(row); msgs.scrollTop = msgs.scrollHeight;
+  }
+  function addThinking() {
+    const row = document.createElement('div');
+    row.className = 'msg-row'; row.id = 'thinking';
+    row.innerHTML = `<div class="avatar ai">NL</div><div class="bubble ai thinking"><div class="dot-pulse"><span></span><span></span><span></span></div><span style="margin-left:6px;font-size:12px;color:#888780">Consulting Nigerian tax statutes…</span></div>`;
+    msgs.appendChild(row); msgs.scrollTop = msgs.scrollHeight;
+  }
+  function removeThinking() { const t = document.getElementById('thinking'); if (t) t.remove(); }
+  function addAIBubble(data) {
+    const row = document.createElement('div');
+    row.className = 'msg-row';
+    let citesHtml = '';
+    if (data.citations && data.citations.length) {
+      citesHtml = '<div class="citations"><div class="cite-label">Statutory citations</div>';
+      data.citations.forEach(c => {
+        citesHtml += `<div class="cite-card"><div class="cite-top"><span class="cite-badge">${escHtml(c.act)}</span><span class="cite-ref">${escHtml(c.section)}</span></div><div class="cite-text">${escHtml(c.excerpt)}</div></div>`;
+      });
+      citesHtml += '</div>';
+    }
+    let relHtml = '';
+    if (data.related_topics && data.related_topics.length) {
+      relHtml = `<div class="related-row">${data.related_topics.map(t=>`<span class="related-tag">${escHtml(t)}</span>`).join('')}</div>`;
+    }
+    row.innerHTML = `<div class="avatar ai">NL</div><div class="bubble ai">${escHtml(data.answer)}${citesHtml}${relHtml}<div class="disclaimer">Informational only — not formal tax advice. Verify with a qualified Nigerian tax professional or FIRS directly.</div></div>`;
+    msgs.appendChild(row); msgs.scrollTop = msgs.scrollHeight;
+  }
+  function addErrorBubble(msg) {
+    const row = document.createElement('div');
+    row.className = 'msg-row';
+    row.innerHTML = `<div class="avatar ai">NL</div><div class="bubble ai" style="color:#A32D2D">${escHtml(msg)}</div>`;
+    msgs.appendChild(row); msgs.scrollTop = msgs.scrollHeight;
+  }
+  async function send() {
+    const q = inp.value.trim();
+    if (!q || busy) return;
+    busy = true; btn.disabled = true; inp.value = '';
+    addUserBubble(q); addThinking();
+    try {
+      const res = await fetch('/api/tax-query', {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({ question: q })
+      });
+      const data = await res.json();
+      removeThinking();
+      if (!res.ok) throw new Error(data.error || 'Server error');
+      addAIBubble(data);
+    } catch (err) {
+      removeThinking();
+      addErrorBubble('Something went wrong: ' + err.message);
+    }
+    busy = false; btn.disabled = false; inp.focus();
+  }
+</script>
+</body>
+</html>
